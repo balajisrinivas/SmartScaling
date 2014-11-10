@@ -19,7 +19,7 @@ if __name__ == '__main__':
             date=int(line)
         else:
             stockSymbolList.append(line)
-    outputFileName = str(date)
+    outputFileName = "output.txt"
     f2 = open(outputFileName,"w")
     f2.seek(0)
     #print date
