@@ -3,9 +3,7 @@ from random import seed
 
 if __name__ == '__main__':
     inputFileName = "input.txt"
-    outputFileName = "output.txt"
     f1 = open(inputFileName,'r')
-    f2 = open(outputFileName,"r+")
     stockSymbolList = []
     dataList=[]
     for line in f1:
@@ -21,20 +19,23 @@ if __name__ == '__main__':
             date=int(line)
         else:
             stockSymbolList.append(line)
+    outputFileName = str(date)
+    f2 = open(outputFileName,"w")
+    f2.seek(0)
     #print date
     #print stockSymbolList
     numHours = 12
     numMinutes = 24
     numSeconds = 24
-    numMilliseconds = 1000
+    numMilliseconds = 30
     lenStockSymbolList = len(stockSymbolList)
-    random.seed(1000)
+    random.seed(random.randint(100,200))
     for i in range(numHours):
         for j in range(numMinutes):
             for k in range(numSeconds):
                 for l in range(numMilliseconds):
                     tdata=""
-                    tdata+=str(date)+str(i).zfill(2)+str(j).zfill(2)+str(k).zfill(2)+"."+str(l).zfill(3)
+                    tdata+=str(date)+str(i).zfill(2)+str(j).zfill(2)+str(k).zfill(2)+"."+str(l).zfill(2)
                     #print tdata
                     tdata += ','
                     stockSymbolListIndex = random.randrange(0,lenStockSymbolList,1)
