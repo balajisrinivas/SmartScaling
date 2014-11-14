@@ -22,13 +22,18 @@ class ConnectionManager:
             self.clientConnections.append(SimpleClient())
 	    
         self.clientConnections[0].connect(self.configMgr.getNodes())
-	keyspace = "finalSpace"
+	keyspace = "finSpa"
 	replication = "2"
-	tableName = "finalData"
+	tableName = "finData"
+	how_many_at_a_time = 100 # How many records to insert in a batch.
+	howLong = 120 # Run for 120 seconds.
+	sleep_interval = 3 # Sleep for 3 seconds.
+	first_N_rows = 500 # how many rows to fetch at a time.
+
 	#self.clientConnections[0].create_schema(keyspace, replication)
 	#self.clientConnections[0].create_column_family(keyspace, tableName)
-	self.clientConnections[0].load_data(keyspace, tableName)
-	self.clientConnections[0].query_schema(keyspace, tableName)
+	self.clientConnections[0].load_data(keyspace, tableName, how_many_at_a_time, sleep_interval)
+	self.clientConnections[0].query_schema(keyspace, tableName, first_N_rows, howLong, sleep_interval)
 	self.clientConnections[0].close()
 
 def main():

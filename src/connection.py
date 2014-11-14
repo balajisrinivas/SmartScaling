@@ -41,7 +41,7 @@ class SimpleClient:
 	self.session.execute(create_column_family)
 	print("Column family created.")
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    def load_data(self, keyspace, tableName, number):
+    def load_data(self, keyspace, tableName, how_many_at_a_time, sleep_interval):
 
 	out_file = open('output.txt','r')
 	data = out_file.readlines()
@@ -67,7 +67,7 @@ class SimpleClient:
 
 		batch.add(insertQuery, (idVal, company, openVal, highVal, lowVal, closeVal))
 
-		if counter == number:
+		if counter == how_many_at_a_time:
 			print("Inserting batch of "+str(counter)+" elements.")
 
 			start = time.time()
@@ -77,6 +77,11 @@ class SimpleClient:
 			# Send the response time to monitor server.
 			print("Response time : "+str(end - start)+ " seconds.")
 			counter = 0
+			
+			# After inserting bunch of records, sleep for some time.
+			print("Going to sleep.")
+			time.sleep(sleep_interval)
+			print("Waking up...")
 
 
 	if counter > 0 :
@@ -91,22 +96,31 @@ class SimpleClient:
 	out_file.close()
         print('Data loaded.')
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    def query_schema(self, keyspace, tableName):
+    def query_schema(self, keyspace, tableName, first_N_rows, howLong, sleep_interval):
 
-	start = time.time()
-        results = self.session.execute("""
-	    SELECT * FROM """+keyspace+"""."""+tableName+""" ;""")
-	end = time.time()
-        print("Data  retrived :")
-	print("")
+	maxTime = time.time() + howLong
 
 	print "%-30s\t%-20s\t%-20s\t%-20s\t%-20s\t%-20s\n%s" % ("id", "Company", "OpenValue", "HighValue", "LowValue", "CloseValue", "-------------------------------+-----------------------+-----------------------+-----------------------+-----------------------+-----------------------")
 
-        for row in results:
-            print "%-30s\t%-20s\t%-20s\t%-20s\t%-20s\t%-20s" % (row.id, row.company, row.open, row.high, row.low, row.close)
-	
+	while time.time() < maxTime:
+		start = time.time()
+        	results = self.session.execute("""
+		    SELECT * FROM """+keyspace+"""."""+tableName+""" LIMIT """+str(first_N_rows)+""" ;""")
+		end = time.time()
+
+		for row in results:
+			print "%-30s\t%-20s\t%-20s\t%-20s\t%-20s\t%-20s" % (row.id, row.company, row.open, row.high, row.low, row.close)
+
+		print("")
+		print("Response time : "+str(end - start)+" seconds.")
+
+		print("Going to sleep.")
+		time.sleep(sleep_interval)
+		print("Waking up...")
+
+        print("Data  retrived :")
 	print("")
-	print("Response time : "+str(end - start)+" seconds.")
+
         print('Schema queried.')
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
