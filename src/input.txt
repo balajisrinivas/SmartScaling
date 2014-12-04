@@ -1,5 +1,5 @@
 date: 
-20141108
+20141228
 
 stock_symbols:
 A
