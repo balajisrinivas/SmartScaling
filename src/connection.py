@@ -291,8 +291,6 @@ class SimpleClient:
         counter = responseTimesQ.qsize()
         for i in range(1, counter+1):
             respTimeFile.write(responseTimesQ.get_nowait())       
-        
-            
         respTimeFile.close()
         
         #total_function_time = (end_time - start_time)       
